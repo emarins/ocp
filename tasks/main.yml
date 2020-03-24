@@ -1,0 +1,312 @@
+---
+# tasks file for emarins.ocp
+
+  - name: Installing named
+    yum:
+      name: "{{ dns_packages }}"
+      state: latest
+
+  - name: Enable and Activate DNS Service
+    service:
+      name: named
+      enabled: yes
+      state: started
+
+  - name: Enable firewall rules
+    firewalld:
+      service: dns
+      permanent: yes
+      state: enabled
+      immediate: yes
+
+  - name: Deploy forward DNS zone
+    template:
+      src: templates/forward.zone.j2
+      dest: /var/named/forward.zone
+    notify: Restart DNS service
+
+  - name: Deploy reverse DNS zone
+    template:
+      src: templates/reverse.zone.j2
+      dest: /var/named/reverse.zone
+    notify: Restart DNS service
+
+  - name: "Adding Forward and Reverse zones into /etc/named.rfc1912.zones"
+    blockinfile:
+      state: present
+      path: /etc/named.rfc1912.zones
+      block: |
+        zone "{{ domain_name }}" IN {
+               type master;
+               file "forward.zone";
+               allow-update { none; };
+        };
+
+        zone "{{ domain_reverse }}" IN {
+               type master;
+               file "reverse.zone";
+               allow-update { none; };
+        };
+    notify: Restart DNS service
+
+  - name: Make DNS listen to {{ infrastructure_server_ip }}
+    lineinfile:
+      regex: 'listen-on port 53*'
+      line: "	listen-on port 53 { 127.0.0.1; {{ infrastructure_server_ip }}; };"
+      state: present
+      path: /etc/named.conf
+    notify: Restart DNS service
+
+  - name: Allow DNS queries from  {{ dns_network }}
+    lineinfile:                                       
+      insertafter: "options {"
+      regex: 'allow-query*'                     
+      line: "	allow-query     { localhost; {{ dns_network }}; };"
+      state: present                                  
+      path: /etc/named.conf                           
+    notify: Restart DNS service  
+
+  - name: Allow DNS recursion from {{ dns_network }}
+    lineinfile:
+      insertafter: "options {"
+      regex: 'allow-recursion*'
+      line: "	allow-recursion { 127.0.0.1; {{ dns_network }}; };"
+      state: present
+      path: /etc/named.conf
+    notify: Restart DNS service
+
+  - name: Allow DNS forwarders to {{ dns_forwarders }}
+    lineinfile:
+      insertafter: "options {"
+      regex: 'forwarders*'
+      line: "	forwarders { {{ dns_forwarders }}; };"
+      state: present
+      path: /etc/named.conf
+    notify: Restart DNS service
+
+  - name: Allow DNS cache queries from {{ dns_network }}
+    lineinfile:
+      insertafter: "options {"
+      regex: 'allow-query-cache*'
+      line: "	allow-query-cache { 127.0.0.1; {{ dns_network }}; };"
+      state: present
+      path: /etc/named.conf
+    notify: Restart DNS service
+
+  - name: Diasble dnssec-enable in /etc/named.conf
+    lineinfile:
+      insertafter: "options {"
+      regex: 'dnssec-enable*'
+      line: "         dnssec-enable no;"
+      state: present
+      path: /etc/named.conf
+    notify: Restart DNS service
+
+  - name: Disable dnssec-validation in /etc/named.conf
+    lineinfile:
+      insertafter: "options {"
+      regex: 'dnssec-validation*'
+      line: "         dnssec-validation no;"
+      state: present
+      path: /etc/named.conf
+    notify: Restart DNS service
+
+
+  #- name: Query DNS records
+  #  debug: 
+  #    msg: "Querying for IPv4 address for {{ item }}. produces {{ lookup('dig', 'ibm.local', '@9.16.8.33') }}"
+  #  with_items:
+  #    - "{{ infrastructure_server_name }}" 
+
+  - name: Install vsftpd
+    yum:
+      name: vsftpd
+      state: latest
+
+  - name: Enable and Activate vsftpd Service
+    service:
+      name: vsftpd
+      enabled: yes
+      state: started
+    
+  - name: Enable ftp firewall rules
+    firewalld:
+      service: ftp
+      permanent: yes   
+      state: enabled   
+      immediate: yes   
+
+  - name: Setting ftpd_use_passive_mode to on 
+    seboolean:
+      name: ftpd_use_passive_mode
+      persistent: yes
+      state: yes
+
+  - name: Enable anonymous access for vsftpd service
+    lineinfile:
+      regex: '^anonymous_enable*'
+      path: /etc/vsftpd/vsftpd.conf
+      line: anonymous_enable=YES
+      state: present 
+
+  - name: Create /var/ftp/pub directory
+    file:
+      state: directory
+      mode: 0755
+      path: /var/ftp/pub
+
+  - name: Copying files from ansible to /var/ftp/pub on remote server
+    copy:
+      src: "{{ item }}"
+      dest: /var/ftp/pub
+    with_fileglob:
+      - "{{ ocp_install_dir }}/rhcos*.gz"
+
+  - name: Install haproxy
+    yum:
+      name: haproxy
+      state: latest
+
+  - name: Setting haproxy_connect_any to on
+    seboolean:
+      name: haproxy_connect_any
+      persistent: yes
+      state: yes
+
+  - name: Enable and Activate haproxy Service
+    service:
+      name: haproxy
+      enabled: yes
+      state: started
+    
+  - name: Enable haproxy firewall rules
+    firewalld:
+      port: "{{ item }}/tcp" 
+      permanent: yes   
+      state: enabled   
+      immediate: yes  
+    loop:
+      - 80
+      - 22623
+      - 6443
+
+  - name: Deploy /etc/haproxy/haproxy.cfg
+    template:
+      src: templates/haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+    notify: Restart haproxy service
+
+  - name: Deploy RHCOS.PARM file
+    template:
+      src: templates/RHCOS.PARM.j2
+      dest: /var/ftp/pub/RHCOS.PARM
+      mode: 0644
+
+  - name: Deploy RHCOS.EXEC
+    copy:
+      src: files/RHCOS.EXEC
+      dest: /var/ftp/pub/RHCOS.EXEC
+      mode: 0644
+
+  - name: Deploy {{ rhcos_kernel }} file
+    copy:
+      src: "{{ ocp_install_dir }}/{{ rhcos_kernel }}"
+      dest: /var/ftp/pub/KERNEL.IMG
+      mode: 0644
+
+  - name: Deploy {{ rhcos_initrd }} file
+    copy:
+      src: "{{ ocp_install_dir }}/{{ rhcos_initrd }}"
+      dest: /var/ftp/pub/INITRD.IMG
+      mode: 0644
+
+  - name: Deploy {{ openshift_installer }} file
+    copy:
+      src: "{{ ocp_install_dir }}/{{ openshift_installer }}"
+      dest: /var/ftp/pub/
+      mode: 0644
+
+  - name: Deploy {{ openshift_client }} file
+    copy:
+      src: "{{ ocp_install_dir }}/{{ openshift_client }}"
+      dest: /var/ftp/pub/
+      mode: 0644
+
+  - name: Cleanup {{ ocp_stage_dir }}
+    file:
+      state: absent
+      path: "{{ ocp_stage_dir }}/"
+
+  - name: Create {{ ocp_stage_dir }}
+    file:
+      state: directory
+      path: "{{ ocp_stage_dir }}"
+
+  - name: Unzip {{ openshift_installer }} to {{ ocp_stage_dir }}
+    unarchive:
+      dest: "{{ ocp_stage_dir }}"
+      src: "/var/ftp/pub/{{ openshift_installer }}" 
+      remote_src: yes
+
+  - name: Unzip {{ openshift_client }} to /usr/local/bin
+    unarchive:
+      dest: /usr/local/bin
+      src: "/var/ftp/pub/{{ openshift_client }}"
+      remote_src: yes
+
+  - name: Deploy install-config.yaml
+    template:
+      src: templates/install-config.yaml.j2
+      dest: "{{ ocp_stage_dir }}/install-config.yaml"
+
+  - name: Create backup of install-config.yaml
+    copy:
+      src: "{{ ocp_stage_dir }}/install-config.yaml"
+      dest: "{{ ocp_stage_dir }}/install-config.yaml.backup"
+      remote_src: yes
+
+  - name: Generate the Kubernetes manifests for the cluster
+    shell:
+      cmd: ./openshift-install create manifests --dir=/stage
+      chdir: "{{ ocp_stage_dir }}"
+    register: command_output
+
+  - name: Debug - create manifests
+    debug:
+      var: command_output
+
+  - name: Create backup of manifests/cluster-scheduler-02-config.yml
+    copy:
+      src: "{{ ocp_stage_dir }}/manifests/cluster-scheduler-02-config.yml"
+      dest: "{{ ocp_stage_dir }}/cluster-scheduler-02-config.yml.original"
+      remote_src: yes
+
+  - name: Modify the manifests/cluster-scheduler-02-config.yml Kubernetes manifest file to prevent Pods from being scheduled on control nodes
+    lineinfile:
+      regex: 'mastersSchedulable*'
+      line: '  mastersSchedulable: False'
+      path: "{{ ocp_stage_dir }}/manifests/cluster-scheduler-02-config.yml"
+
+  - name: Create backup of manifests/cluster-scheduler-02-config.yml 
+    copy:
+      src: "{{ ocp_stage_dir }}/manifests/cluster-scheduler-02-config.yml"
+      dest: "{{ ocp_stage_dir }}/cluster-scheduler-02-config.yml.backup"
+      remote_src: yes
+
+  - name: Generate the ignition config files
+    shell:
+      cmd: ./openshift-install create ignition-configs --dir=/stage
+      chdir: "{{ ocp_stage_dir }}"
+    register: command_output
+
+  - name: Debug - create ignition-configs
+    debug:
+      var: command_output
+  
+  - name: Copying files from ansible to /var/ftp/pub on remote server
+    copy:     
+      src: "{{ item }}"
+      dest: /var/ftp/pub
+      remote_src: yes
+    with_fileglob:
+      - "{{ ocp_stage_dir }}/*.ign"

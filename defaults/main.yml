@@ -1,0 +1,66 @@
+---
+# defaults file for emarins.ocp
+# DNS Description	DNS Example Name	DNS Example IP address
+
+domain_name: ibm.local
+cluster_name: ocp4
+dns_network: 192.168.0.0/24
+domain_reverse: 0.168.192.in-addr.arpa
+infrastructure_server_name: infraserver
+infrastructure_server_ip: 192.168.0.33
+bootstrap_server_name: bootstrap
+bootstrap_server_ip: 192.168.0.23
+bootstrap_defaultgw: 192.168.0.1
+load_balancer: 192.168.0.33
+bootstrap_netmask: 255.255.255.0
+bootstrap_ipldisk: "0100"
+bootstrap_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz 
+dns_forwarders: "9.0.130.50; 9.0.128.50"
+vnic_addresses: "0.0.1000,0.0.1001,0.0.1002" 
+vnic_layer2: 1
+rhcos_kernel: rhcos-4.2.18-s390x-installer-kernel 
+rhcos_initrd: rhcos-4.2.18-s390x-installer-initramfs.img
+openshift_installer: openshift-install-linux-4.2.23.tar.gz
+openshift_client: openshift-client-linux-4.2.23.tar.gz 
+ocp_stage_dir: /stage
+worker_replicas: 2
+
+control_plane_servers:
+  - id: 1
+    name: master
+    ip: 192.168.0.24
+  - id: 2
+    name: master
+    ip: 192.168.0.25
+  - id: 3
+    name: master
+    ip: 192.168.0.26
+
+compute_servers:
+  - id: 1
+    name: worker
+    ip: 192.168.0.27
+  - id: 2
+    name: worker
+    ip: 192.168.0.28
+
+etcd_servers:
+  - id: 0  
+    name: etcd-0 
+    ip: 192.168.0.24
+  - id: 1
+    name: etcd-1
+    ip: 192.168.0.25
+  - id: 2
+    name: etcd-2
+    ip: 192.168.0.26
+
+dns_packages:
+  - bind-utils
+  - bind
+
+ocp_install_dir: /var/www/html/ocp
+
+ocp_files:
+  - rhcos-4.2.18-s390x-metal-dasd.raw.gz
+  - rhcos-4.2.18-s390x-metal-zfcp.raw.gz

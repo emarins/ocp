@@ -1,0 +1,25 @@
+apiVersion: v1
+baseDomain: {{ domain_name }} 
+compute:
+- architecture: s390x
+  hyperthreading: Enabled   
+  name: worker
+  replicas: {{ worker_replicas }} 
+controlPlane:
+  architecture: s390x
+  hyperthreading: Enabled   
+  name: master 
+  replicas: 3 
+metadata:
+  name: {{ cluster_name }}
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14 
+    hostPrefix: 23 
+  networkType: OpenShiftSDN
+  serviceNetwork: 
+  - 172.30.0.0/16
+platform:
+  none: {} 
+pullSecret: '{{ lookup('file', 'pull-secret') }}' 
+sshKey: '{{ lookup('file', 'id_rsa.pub') }}'

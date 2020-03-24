@@ -1,0 +1,12 @@
+---
+# handlers file for emarins.ocp
+
+ - name: Restart DNS service
+   service:
+     name: named
+     state: restarted
+
+ - name: Restart haproxy service
+   service:
+     name: haproxy
+     state: restarted

@@ -1,0 +1,93 @@
+global
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+    # utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+frontend openshift-api-server
+    bind *:6443
+    default_backend openshift-api-server
+    mode tcp
+    option tcplog
+
+backend openshift-api-server
+    balance source
+    mode tcp
+    server bootstrap {{ bootstrap_server_ip }}:6443 check
+{% for master in control_plane_servers %}
+    server master{{master.id}} {{ master.ip }}:6443  check
+{% endfor %}
+
+frontend machine-config-server
+    bind *:22623
+    default_backend machine-config-server
+    mode tcp
+    option tcplog
+
+backend machine-config-server
+    balance source
+    mode tcp
+    server bootstrap {{bootstrap_server_ip}}:22623 check
+{% for master in control_plane_servers  %}
+    server master{{master.id}} {{master.ip}}:22623  check
+{% endfor %}
+
+frontend hafrontend-http
+    bind *:80
+    mode http
+    default_backend habackend-http
+
+frontend hafrontend-https
+    bind *:443
+    default_backend habackend-https
+    mode tcp
+    option tcplog
+
+backend habackend-http
+    mode http
+    balance roundrobin
+    option httpchk HEAD / HTTP/1.1\r\nHost:localhost
+    cookie SERVERID insert indirect
+{% for compute in compute_servers %}
+    server app{{compute.id}} {{ compute.ip }}:80 cookie app{{compute.id}} check
+{% endfor %}
+
+backend habackend-https
+    balance roundrobin
+    mode tcp
+{% for compute in compute_servers %}
+    server app{{compute.id}} {{ compute.ip }}:443 check
+{% endfor %}

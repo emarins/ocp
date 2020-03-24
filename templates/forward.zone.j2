@@ -1,0 +1,46 @@
+$TTL     1D
+@        IN  SOA {{ infrastructure_server_name }}.{{ cluster_name }}.{{ domain_name }}. root.{{ domain_name }}. (
+                      2019022400 ; serial
+                      3h         ; refresh
+                      15         ; retry
+                      1w         ; expire
+                      3h         ; minimum
+                                                                            )
+
+        IN NS {{ infrastructure_server_name }}.{{ cluster_name }}.{{ domain_name}}.
+{{ infrastructure_server_name }}.{{ cluster_name }}  IN A {{ infrastructure_server_ip }}
+
+; The api points to the IP of your load balancer
+api.{{ cluster_name }} IN A {{ load_balancer }}
+api-int.{{ cluster_name }}  IN A {{ load_balancer }}
+
+;
+; The wildcard also points to the load balancer
+*.apps.{{ cluster_name }} IN A {{ load_balancer }}
+
+;
+; Create entry for the bootstrap host
+{{ bootstrap_server_name }}.{{ cluster_name }} IN A {{ bootstrap_server_ip }}
+
+;
+; Create entries for the worker hosts
+{% for compute in compute_servers %}
+{{ compute.name}}{{compute.id}}.{{ cluster_name }} IN A {{ compute.ip }}
+{% endfor %}
+
+
+; Create entries for the master hosts
+{% for controlplane in control_plane_servers %}
+{{ controlplane.name}}{{ controlplane.id }}.{{ cluster_name }} IN A {{ controlplane.ip }}
+{% endfor %}
+
+; etcd records
+{% for etcd in etcd_servers %}
+etcd-{{ etcd.id }}.{{ cluster_name }} IN A {{ etcd.ip }}
+{% endfor %}
+
+; OpenShift Container Platform also requires a SRV DNS record for etcd server on that machine with priority 0, weight 10 and port 2380. A cluster that uses three control plane machines requires the following records:
+; _service._proto.name. TTL class SRV priority weight port target.
+{% for controlplane in etcd_servers %}
+_etcd-server-ssl._tcp.{{ cluster_name }} 86400 IN SRV 0 10 2380 etcd-{{ controlplane.id }}.{{ cluster_name }}.{{ domain_name}}.
+{% endfor %}

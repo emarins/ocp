@@ -1,0 +1,6 @@
+rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=dasda
+coreos.inst.image_url=ftp://{{ infrastructure_server_ip }}/pub/{{ bootstrap_image }}
+coreos.inst.ignition_url=ftp://{{ infrastructure_server_ip }}/pub/bootstrap.ign
+ip={{ bootstrap_server_ip }}::{{ bootstrap_defaultgw }}:{{ bootstrap_netmask }}:::none nameserver={{ infrastructure_server_ip }}
+rd.znet=qeth,{{ vnic_addresses }},layer2={{ vnic_layer2 }},portno=0 zfcp.allow_lun_scan=0
+cio_ignore=all,!condev rd.dasd=0.0.{{ bootstrap_ipldisk }}
