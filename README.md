@@ -19,7 +19,7 @@ You need to download following files:
 Role Variables
 --------------
 
-The central configuration file for the automation is located at defaults/main.yml. It is recommended that you created your own variable files and replace the default values.
+The central configuration file for the automation is located at defaults/main.yml. It is recommended that you created your own variable file and update the values to fit your environment.
 
 The description of the settable variables for this role can be found below. You need to ensure you include these variables into your playbook to ensure a successfull installation.
 
