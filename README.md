@@ -23,28 +23,28 @@ The central configuration file for the automation is located at defaults/main.ym
 
 The description of the settable variables for this role can be found below. You need to ensure you include these variables into your playbook to ensure a successfull installation.
 
-Parameter			Value (sample)  			Description
+Parameter=Value.          Description
 
-domain_name			Ibm.local				Domain Name
+domain_name=ibm.local        Domain Name
 
-cluster_name			ocp4	         		 	Cluster Name
+cluster_name=ocp4.        Cluster Name
 
-dns_network			192.168.0.0/24			        DNS Network for the Openshift Cluster. Used to set up DNS
+dns_network=192.168.0.0/24			        DNS Network for the Openshift Cluster. Used to set up DNS
 
-domain_reverse			0.168.192.in-addr.arpa			DNS Network for the Openshift Cluster. Used to set up DNS
+domain_reverse=0.168.192.in-addr.arpa			DNS Network for the Openshift Cluster. Used to set up DNS
 
-infrastructure_server_name	infraserver				Short name for your infrastructure server (without domain name)
+infrastructure_server_name=infraserver				Short name for your infrastructure server (without domain name)
 
-infrastructure_server_ip	192.168.0.33				IP address of your infrastructure server.
+infrastructure_server_ip=192.168.0.33				IP address of your infrastructure server.
 
-bootstrap_server_name		bootstrap				Short name for your bootstrap server (without domain name)
-bootstrap_server_ip		192.168.0.23				IP address of your bootstrap server
-bootstrap_defaultgw		192.168.0.1				IP address for the default gw of your bootstrap server
-load_balancer			192.168.0.33				IP address where HAPROXY service is installed. In our case it is installed in the infrastructure server.
-bootstrap_netmask		255.255.255.0				Bootstrap subnet mask.  Used to build REDHAT.PARM file
-bootstrap_ipldisk		0100					Bootstrap IPL disk.  Used to build REDHAT.PARM file
-bootstrap_image			rhcos-4.2.10-s390x-metal-dasd.raw.gz	Name of the bootstrap Image
-dns_forwarders			192.168.0.50; 192.168.0.51		DNS forwarders addresses. Put the official DNS server addresses of your network.
+bootstrap_server_name=bootstrap				Short name for your bootstrap server (without domain name)
+bootstrap_server_ip=192.168.0.23				IP address of your bootstrap server
+bootstrap_defaultgw=192.168.0.1				IP address for the default gw of your bootstrap server
+load_balancer=192.168.0.33				IP address where HAPROXY service is installed. In our case it is installed in the infrastructure server.
+bootstrap_netmask=255.255.255.0				Bootstrap subnet mask.  Used to build REDHAT.PARM file
+bootstrap_ipldisk=0100					Bootstrap IPL disk.  Used to build REDHAT.PARM file
+bootstrap_image=rhcos-4.2.10-s390x-metal-dasd.raw.gz	Name of the bootstrap Image
+dns_forwarders=192.168.0.50; 192.168.0.51		DNS forwarders addresses. Put the official DNS server addresses of your network.
 vnic_addresses			0.0.1000,0.0.1001,0.0.1002		Virtual NIC addresses used for the virtual Linux guests. You need to specify 3 virtual address.
 vnic_layer2i			1					If the VNIC is using layer2 or not. Used to build REDHAT.PARM file
 rhcos_kernel			rhcos-4.2.18-s390x-installer-kernel 	Name of the RHCOS kernel file that you downloaded from Redhat site.
