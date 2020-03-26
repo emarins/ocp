@@ -26,11 +26,17 @@ The description of the settable variables for this role can be found below. You 
 Parameter			Value (sample)  			Description
 
 domain_name			Ibm.local				Domain Name
+
 cluster_name			ocp4	         		 	Cluster Name
+
 dns_network			192.168.0.0/24			        DNS Network for the Openshift Cluster. Used to set up DNS
+
 domain_reverse			0.168.192.in-addr.arpa			DNS Network for the Openshift Cluster. Used to set up DNS
+
 infrastructure_server_name	infraserver				Short name for your infrastructure server (without domain name)
+
 infrastructure_server_ip	192.168.0.33				IP address of your infrastructure server.
+
 bootstrap_server_name		bootstrap				Short name for your bootstrap server (without domain name)
 bootstrap_server_ip		192.168.0.23				IP address of your bootstrap server
 bootstrap_defaultgw		192.168.0.1				IP address for the default gw of your bootstrap server
