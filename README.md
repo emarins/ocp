@@ -19,9 +19,12 @@ You need to download following files:
 Role Variables
 --------------
 
+The central configuration file for the automation is located at defaults/main.yml. It is recommended that you created your own variable files and replace the default values.
+
 The description of the settable variables for this role can be found below. You need to ensure you include these variables into your playbook to ensure a successfull installation.
 
 Parameter			Value (sample)  			Description
+
 domain_name			Ibm.local				Domain Name
 cluster_name			ocp4	         		 	Cluster Name
 dns_network			192.168.0.0/24			        DNS Network for the Openshift Cluster. Used to set up DNS
