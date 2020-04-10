@@ -23,6 +23,8 @@ The central configuration file for the automation is located at defaults/main.ym
 
 
 globalvars.yml file is a sample that you can use to update values to fit your environment
+
+
 playbook_ocp.yml file is a playbook sample file that loads the emarins.ocp rule and globalvars.yml file
 
 
