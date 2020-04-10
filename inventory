@@ -1,0 +1,3 @@
+[ocp]
+# Replace ansible1.ahe.boulder.ibm.com with the name of you bastion server
+bastion.ibm.local
