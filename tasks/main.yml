@@ -79,7 +79,7 @@
     lineinfile:
       insertafter: "options {"
       regex: 'forwarders*'
-      line: "	forwarders { {{ dns_forwarders }}; };"
+      line: "	forwarders { {{ dns_forwarders }} };"
       state: present
       path: /etc/named.conf
     notify: Restart DNS service
