@@ -59,7 +59,7 @@ dns_packages:
   - bind-utils
   - bind
 
-ocp_install_dir: /var/www/html/ocp
+ocp_download_dir: /opt/downloads
 
 ocp_files:
   - rhcos-4.2.18-s390x-metal-dasd.raw.gz

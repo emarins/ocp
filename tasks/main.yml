@@ -160,7 +160,7 @@
       src: "{{ item }}"
       dest: /var/ftp/pub
     with_fileglob:
-      - "{{ ocp_install_dir }}/rhcos*.gz"
+      - "{{ ocp_download_dir }}/rhcos*.gz"
 
   - name: Install haproxy
     yum:
@@ -210,25 +210,25 @@
 
   - name: Deploy {{ rhcos_kernel }} file
     copy:
-      src: "{{ ocp_install_dir }}/{{ rhcos_kernel }}"
+      src: "{{ ocp_download_dir }}/{{ rhcos_kernel }}"
       dest: /var/ftp/pub/KERNEL.IMG
       mode: 0644
 
   - name: Deploy {{ rhcos_initrd }} file
     copy:
-      src: "{{ ocp_install_dir }}/{{ rhcos_initrd }}"
+      src: "{{ ocp_download_dir }}/{{ rhcos_initrd }}"
       dest: /var/ftp/pub/INITRD.IMG
       mode: 0644
 
   - name: Deploy {{ openshift_installer }} file
     copy:
-      src: "{{ ocp_install_dir }}/{{ openshift_installer }}"
+      src: "{{ ocp_download_dir }}/{{ openshift_installer }}"
       dest: /var/ftp/pub/
       mode: 0644
 
   - name: Deploy {{ openshift_client }} file
     copy:
-      src: "{{ ocp_install_dir }}/{{ openshift_client }}"
+      src: "{{ ocp_download_dir }}/{{ openshift_client }}"
       dest: /var/ftp/pub/
       mode: 0644
 
