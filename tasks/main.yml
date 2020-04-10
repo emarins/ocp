@@ -75,7 +75,7 @@
       path: /etc/named.conf
     notify: Restart DNS service
 
-  - name: Allow DNS forwarders to {{ dns_forwarders }}
+  - name: Allow DNS forwarders to {{ dns_forwarders }} 
     lineinfile:
       insertafter: "options {"
       regex: 'forwarders*'
