@@ -49,10 +49,10 @@
         };
     notify: Restart DNS service
 
-  - name: Make DNS listen to {{ infrastructure_server_ip }}
+  - name: Make DNS listen to {{ bastion_server_ip }}
     lineinfile:
       regex: 'listen-on port 53*'
-      line: "	listen-on port 53 { 127.0.0.1; {{ infrastructure_server_ip }}; };"
+      line: "	listen-on port 53 { 127.0.0.1; {{ bastion_server_ip }}; };"
       state: present
       path: /etc/named.conf
     notify: Restart DNS service
@@ -116,7 +116,7 @@
   #  debug: 
   #    msg: "Querying for IPv4 address for {{ item }}. produces {{ lookup('dig', 'ibm.local', '@9.16.8.33') }}"
   #  with_items:
-  #    - "{{ infrastructure_server_name }}" 
+  #    - "{{ bastion_server_name }}" 
 
   - name: Install vsftpd
     yum:

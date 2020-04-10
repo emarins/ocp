@@ -1,5 +1,5 @@
 $TTL     1D
-@        IN  SOA {{ infrastructure_server_name }}.{{ cluster_name }}.{{ domain_name }}. root.{{ domain_name }}. (
+@        IN  SOA {{ bastion_server_name }}.{{ cluster_name }}.{{ domain_name }}. root.{{ domain_name }}. (
                       2019022400 ; serial
                       3h         ; refresh
                       15         ; retry
@@ -7,8 +7,8 @@ $TTL     1D
                       3h         ; minimum
                                                                             )
 
-        IN NS {{ infrastructure_server_name }}.{{ cluster_name }}.{{ domain_name}}.
-{{ infrastructure_server_name }}.{{ cluster_name }}  IN A {{ infrastructure_server_ip }}
+        IN NS {{ bastion_server_name }}.{{ cluster_name }}.{{ domain_name}}.
+{{ bastion_server_name }}.{{ cluster_name }}  IN A {{ bastion_server_ip }}
 
 ; The api points to the IP of your load balancer
 api.{{ cluster_name }} IN A {{ load_balancer }}

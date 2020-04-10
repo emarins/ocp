@@ -7,7 +7,7 @@ Supported Platforms = IBM Z (s390x)
 Requirements
 ------------
 
-Download the required files from the Infrastructure Provider page on the Red Hat OpenShift Cluster Manager site (https://cloud.redhat.com/openshift/).
+Download the required files from the bastion Provider page on the Red Hat OpenShift Cluster Manager site (https://cloud.redhat.com/openshift/).
 
 You need to download following files:
 
@@ -47,13 +47,13 @@ dns_network=192.168.0.0/24
 
 domain_reverse=0.168.192.in-addr.arpa			
 
-#Short name for your infrastructure server (without domain name)
+#Short name for your bastion server (without domain name)
 
-infrastructure_server_name=infraserver				
+bastion_server_name=infraserver				
 
-#IP address of your infrastructure server
+#IP address of your bastion server
 
-infrastructure_server_ip=192.168.0.33				
+bastion_server_ip=192.168.0.33				
 
 #Short name for your bootstrap server (without domain name)
 
@@ -67,7 +67,7 @@ bootstrap_server_ip=192.168.0.23
 
 bootstrap_defaultgw=192.168.0.1
 
-#IP address where HAPROXY service is installed. In our case it is installed in the infrastructure server
+#IP address where HAPROXY service is installed. In our case it is installed in the bastion server
 
 load_balancer=192.168.0.33
 
@@ -155,7 +155,7 @@ etcd_servers=
     				  name: etcd-2
     				  ip: 192.168.0.26
                       
-#DNS package names.  Used to install DNS in the infrastructure server
+#DNS package names.  Used to install DNS in the bastion server
 
 dns_packages=
           - bind-utils				
