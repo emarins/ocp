@@ -12,7 +12,7 @@ bootstrap_defaultgw: 192.168.0.1            # Default gateway for the bootstrap 
 bootstrap_netmask: 255.255.255.0         # Bootsstrap subnet mask. Used for the PARM file
 bootstrap_ipldisk: "0100"                # IPL disk address for the RHCOS instances. Used for the PARM file.
 bootstrap_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # Bootstrap image name. Used for the PARM file and other things
-dns_forwarders: "8.8.8.8; 8.8.4.4;"               # DNS forwarder addreses. Used in DNS to forward DNS queries for a local DNS
+dns_forwarders: "8.8.8.8; 8.8.4.4"               # DNS forwarder addreses. Used in DNS to forward DNS queries for a local DNS
 vnic_addresses: "0.0.1000,0.0.1001,0.0.1002"           # VNIC addresses.  Used for PARM file. 
 vnic_layer2: 1                                         # Layer 2 information. Used in PARM file
 rhcos_kernel: rhcos-4.2.18-s390x-installer-kernel      # RHCOS kernel file. Used to build  bootstrap, master and worker nodes
