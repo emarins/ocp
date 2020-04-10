@@ -10,7 +10,7 @@
     service:
       name: named
       enabled: yes
-      state: started
+      state: stopped
 
   - name: Enable firewall rules
     firewalld:
