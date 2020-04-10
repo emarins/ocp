@@ -6,12 +6,12 @@ domain_name: ibm.local
 cluster_name: ocp4
 dns_network: 192.168.0.0/24
 domain_reverse: 0.168.192.in-addr.arpa
-infrastructure_server_name: infraserver
-infrastructure_server_ip: 192.168.0.33
+bastion_server_name: infraserver
+bastion_server_ip: 192.168.0.33
 bootstrap_server_name: bootstrap
 bootstrap_server_ip: 192.168.0.23
 bootstrap_defaultgw: 192.168.0.1
-load_balancer: 192.168.0.33
+load_balancer: "{{ bastion_server_ip }}"
 bootstrap_netmask: 255.255.255.0
 bootstrap_ipldisk: "0100"
 bootstrap_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz 
