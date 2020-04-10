@@ -15,7 +15,7 @@ load_balancer: "{{ bastion_server_ip }}"
 bootstrap_netmask: 255.255.255.0
 bootstrap_ipldisk: "0100"
 bootstrap_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz 
-dns_forwarders: "9.0.130.50; 9.0.128.50"
+dns_forwarders: "8.8.8.8; 8.8.4.4;"
 vnic_addresses: "0.0.1000,0.0.1001,0.0.1002" 
 vnic_layer2: 1
 rhcos_kernel: rhcos-4.2.18-s390x-installer-kernel 
