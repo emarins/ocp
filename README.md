@@ -21,6 +21,11 @@ Role Variables
 
 The central configuration file for the automation is located at defaults/main.yml. It is recommended that you created your own variable file and update the values to fit your environment.
 
+
+globalvars.yml file is a sample that you can use to update values to fit your environment
+playbook_ocp.yml file is a playbook sample file that loads the emarins.ocp rule and globalvars.yml file
+
+
 The description of the settable variables for this role can be found below. You need to ensure you include these variables into your playbook to ensure a successfull installation.
 
 
@@ -156,7 +161,7 @@ dns_packages=
                 
 #Folder where you put the downloaded files from Redhat site
 
-ocp_install_dir=/var/www/html/ocp		
+ocp_download_dir=/opt/downloads	
 
 #RHCOS image names that were downloaded from Redhat site
 
