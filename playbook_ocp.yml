@@ -1,0 +1,16 @@
+---
+- name: Playbook to install OCP on Z
+  hosts: ansible2.ahe.boulder.ibm.com
+  become: yes
+
+  vars_files:
+    - globalvars.yml
+
+  roles:
+    - emarins.ocp
+
+  tasks:
+
+    - name: Starting Local Playbook
+      debug:
+        msg: "All tasks have been completed."
