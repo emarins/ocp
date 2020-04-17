@@ -152,14 +152,14 @@
     notify: Restart vsftpd service
 
   - name: "Enable passive mode on 40000 port into /etc/vsftpd/vsftpd.conf"
-      blockinfile:
-        state: present
-        path: /etc/vsftpd/vsftpd.conf
-        block: |
-          pasv_enable=Yes
-          pasv_max_port=40000
-          pasv_min_port=40000
-      notify: Restart vsftpd service
+    blockinfile:
+      state: present
+      path: /etc/vsftpd/vsftpd.conf
+      block: |
+        pasv_enable=Yes
+        pasv_max_port=40000
+        pasv_min_port=40000
+    notify: Restart vsftpd service
 
   - name: Enable haproxy firewall rules
     firewalld:
