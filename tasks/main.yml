@@ -141,6 +141,7 @@
       name: ftpd_use_passive_mode
       persistent: yes
       state: yes
+    notify: Restart vsftpd service
 
   - name: Enable anonymous access for vsftpd service
     lineinfile:
@@ -148,6 +149,7 @@
       path: /etc/vsftpd/vsftpd.conf
       line: anonymous_enable=YES
       state: present 
+    notify: Restart vsftpd service
 
   - name: Create /var/ftp/pub directory
     file:
@@ -199,8 +201,41 @@
   - name: Deploy RHCOS.PARM file
     template:
       src: templates/RHCOS.PARM.j2
-      dest: /var/ftp/pub/RHCOS.PARM
+      dest: /var/ftp/pub/RHCOS.PARM.ORI
       mode: 0644
+
+  - name: Breaking long lines with 80 chars on RHCOS.PARM file
+    shell: | 
+      cat /var/ftp/pub/RHCOS.PARM.ORI |
+      awk -v WIDTH=80 '
+      {
+        gsub("\t"," ")
+        $0 = line $0
+        while (length <= WIDTH) {
+          line = $0
+          more = getline
+          gsub("\t"," ")
+          if (more)
+            $0 = line "" $0
+          else
+            $0 = line
+            break
+        }
+        while (length >= WIDTH) {
+          print substr($0,1,WIDTH)
+          $0 = substr($0,WIDTH+1)
+        }
+        line = $0 " "
+      }
+
+      END {
+        print
+      }
+      ' | tee /var/ftp/pub/RHCOS.PARM
+    register: stdout
+ 
+  - name: Debug output
+    debug: msg={{ stdout }}
 
   - name: Deploy RHCOS.EXEC
     copy:

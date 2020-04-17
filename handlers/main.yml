@@ -10,3 +10,8 @@
    service:
      name: haproxy
      state: restarted
+
+ - name: Restart vsftpd service
+   service:
+     name: vsftpd
+     state: restarted
