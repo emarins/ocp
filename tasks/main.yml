@@ -341,6 +341,7 @@
       regex: 'mastersSchedulable*'
       line: '  mastersSchedulable: False'
       path: "{{ ocp_stage_dir }}/manifests/cluster-scheduler-02-config.yml"
+    when: worker_replicas > 0
 
   - name: Create backup of manifests/cluster-scheduler-02-config.yml 
     copy:
