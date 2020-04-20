@@ -211,6 +211,7 @@
       - 80
       - 22623
       - 6443
+      - 8404
 
   - name: Deploy /etc/haproxy/haproxy.cfg
     template:

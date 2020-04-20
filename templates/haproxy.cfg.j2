@@ -37,6 +37,17 @@ defaults
     timeout check           10s
     maxconn                 3000
 
+
+# Enable stats
+frontend stats
+    bind *:8404
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+    stats admin if LOCALHOST
+    # REMEMBER TO UPDATE USER (admin) AND PASSWORD (redhot)  BELOW TO PROTECT YOUR PROXY STATS PAGE
+    stats auth admin:redhat
+
 frontend openshift-api-server
     bind *:6443
     default_backend openshift-api-server
