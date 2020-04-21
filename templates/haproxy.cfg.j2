@@ -92,13 +92,25 @@ backend habackend-http
     balance roundrobin
     option httpchk HEAD / HTTP/1.1\r\nHost:localhost
     cookie SERVERID insert indirect
-{% for compute in compute_servers %}
-    server app{{compute.id}} {{ compute.ip }}:80 cookie app{{compute.id}} check
-{% endfor %}
+{% if worker_replicas > 0 %}
+  {% for compute in compute_servers %}
+  server app{{compute.id}} {{ compute.ip }}:80 cookie app{{compute.id}} check
+  {% endfor %}
+{% else %}
+  {% for master in control_plane_servers  %}
+  server master{{master.id}} {{master.ip}}:80 cookie app{{master.id}} check 
+  {% endfor %}
+{% endif %}
 
 backend habackend-https
     balance roundrobin
     mode tcp
-{% for compute in compute_servers %}
-    server app{{compute.id}} {{ compute.ip }}:443 check
-{% endfor %}
+{% if worker_replicas > 0 %}
+  {% for compute in compute_servers %}
+  server app{{compute.id}} {{ compute.ip }}:443 check
+  {% endfor %}
+{% else %}
+  {% for master in control_plane_servers  %}
+  server master{{master.id}} {{master.ip}}:443  check 
+  {% endfor %}
+{% endif %}

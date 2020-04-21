@@ -194,6 +194,12 @@
       name: haproxy_connect_any
       persistent: yes
       state: yes
+ 
+  - name: Deploy /etc/haproxy/haproxy.cfg
+    template: 
+      src: templates/haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+    notify: Restart haproxy service
 
   - name: Enable and Activate haproxy Service
     service:
@@ -212,12 +218,8 @@
       - 22623
       - 6443
       - 8404
-
-  - name: Deploy /etc/haproxy/haproxy.cfg
-    template:
-      src: templates/haproxy.cfg.j2
-      dest: /etc/haproxy/haproxy.cfg
-    notify: Restart haproxy service
+      - 443
+      - 40000
 
   - name: Deploy RHCOS.PARM file
     template:
