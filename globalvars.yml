@@ -24,21 +24,21 @@ worker_replicas: 2                       # Number of worker nodes
 
 control_plane_servers:                   # Master nodes information. In this example we have 3 master nodes
   - id: 1
-    name: master
+    name: master1
     ip: 192.168.0.24
   - id: 2
-    name: master
+    name: master2
     ip: 192.168.0.25
   - id: 3
-    name: master
+    name: master3
     ip: 192.168.0.26
 
 compute_servers:                         # Worker nodes information, In this example we have 3 master nodes
   - id: 1
-    name: worker
+    name: worker1
     ip: 192.168.0.27
   - id: 2
-    name: worker
+    name: worker2
     ip: 192.168.0.28
 
 etcd_servers:                            # ETCD information. Used for DNS forward Zone.
