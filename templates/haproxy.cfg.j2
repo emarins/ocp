@@ -78,8 +78,9 @@ backend machine-config-server
 
 frontend hafrontend-http
     bind *:80
-    mode http
+    mode tcp
     default_backend habackend-http
+    option tcplog
 
 frontend hafrontend-https
     bind *:443
@@ -88,17 +89,17 @@ frontend hafrontend-https
     option tcplog
 
 backend habackend-http
-    mode http
+    mode tcp
     balance roundrobin
-    option httpchk HEAD / HTTP/1.1\r\nHost:localhost
-    cookie SERVERID insert indirect
+    #option httpchk HEAD / HTTP/1.1\r\nHost:localhost
+    #cookie SERVERID insert indirect
 {% if worker_replicas > 0 %}
   {% for compute in compute_servers %}
-  server app{{compute.id}} {{ compute.ip }}:80 cookie app{{compute.id}} check
+  server worker{{compute.id}} {{ compute.ip }}:80 check
   {% endfor %}
 {% else %}
   {% for master in control_plane_servers  %}
-  server master{{master.id}} {{master.ip}}:80 cookie app{{master.id}} check 
+  server master{{master.id}} {{master.ip}}:80 check 
   {% endfor %}
 {% endif %}
 
@@ -107,7 +108,7 @@ backend habackend-https
     mode tcp
 {% if worker_replicas > 0 %}
   {% for compute in compute_servers %}
-  server app{{compute.id}} {{ compute.ip }}:443 check
+  server worker{{compute.id}} {{ compute.ip }}:443 check
   {% endfor %}
 {% else %}
   {% for master in control_plane_servers  %}
