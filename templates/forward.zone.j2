@@ -25,13 +25,13 @@ api-int.{{ cluster_name }}  IN A {{ load_balancer }}
 ;
 ; Create entries for the worker hosts
 {% for compute in compute_servers %}
-{{ compute.name}}{{compute.id}}.{{ cluster_name }} IN A {{ compute.ip }}
+{{ compute.name}}.{{ cluster_name }} IN A {{ compute.ip }}
 {% endfor %}
 
 
 ; Create entries for the master hosts
 {% for controlplane in control_plane_servers %}
-{{ controlplane.name}}{{ controlplane.id }}.{{ cluster_name }} IN A {{ controlplane.ip }}
+{{ controlplane.name}}.{{ cluster_name }} IN A {{ controlplane.ip }}
 {% endfor %}
 
 ; etcd records
