@@ -1,0 +1,45 @@
+$TTL     1D
+@        IN  SOA bastion.ocp4.ibm.local. root.ibm.local. (
+                      2019022400 ; serial
+                      3h         ; refresh
+                      15         ; retry
+                      1w         ; expire
+                      3h         ; minimum
+                                                                            )
+
+        IN NS bastion.ocp4.ibm.local.
+bastion.ocp4  IN A 192.168.0.33
+
+; The api points to the IP of your load balancer
+api.ocp4 IN A 192.168.0.33
+api-int.ocp4  IN A 192.168.0.33
+
+;
+; The wildcard also points to the load balancer
+*.apps.ocp4 IN A 192.168.0.33
+
+;
+; Create entry for the bootstrap host
+bootstrap.ocp4 IN A 192.168.0.23
+
+;
+; Create entries for the worker hosts
+worker1.ocp4 IN A 192.168.0.27
+worker2.ocp4 IN A 192.168.0.28
+
+
+; Create entries for the master hosts
+master1.ocp4 IN A 192.168.0.24
+master2.ocp4 IN A 192.168.0.25
+master3.ocp4 IN A 192.168.0.26
+
+; etcd records
+etcd-0.ocp4 IN A 192.168.0.24
+etcd-1.ocp4 IN A 192.168.0.25
+etcd-2.ocp4 IN A 192.168.0.26
+
+; OpenShift Container Platform also requires a SRV DNS record for etcd server on that machine with priority 0, weight 10 and port 2380. A cluster that uses three control plane machines requires the following records:
+; _service._proto.name. TTL class SRV priority weight port target.
+_etcd-server-ssl._tcp.ocp4 86400 IN SRV 0 10 2380 etcd-0.ocp4.ibm.local.
+_etcd-server-ssl._tcp.ocp4 86400 IN SRV 0 10 2380 etcd-1.ocp4.ibm.local.
+_etcd-server-ssl._tcp.ocp4 86400 IN SRV 0 10 2380 etcd-2.ocp4.ibm.local.

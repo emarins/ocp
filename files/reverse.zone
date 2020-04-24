@@ -1,0 +1,25 @@
+$TTL     1D
+@        IN  SOA bastion.ocp4.ibm.local. root.ibm.local. (
+                      2019022400 ; serial
+                      3h         ; refresh
+                      15         ; retry
+                      1w         ; expire
+                      3h         ; minimum
+                                                                            )
+
+         IN NS bastion.ocp4.ibm.local.
+
+; Create entry for the bastion host
+33 IN PTR bastion.ocp4.ibm.local.
+
+; Create entries for the worker hosts
+27 IN PTR worker1.ocp4.ibm.local.
+28 IN PTR worker2.ocp4.ibm.local.
+
+; Create entries for the master hosts
+24 IN PTR master1.ocp4.ibm.local.
+25 IN PTR master2.ocp4.ibm.local.
+26 IN PTR master3.ocp4.ibm.local.
+
+; Create entry for the bootstrap host
+23 IN PTR bootstrap.ocp4.ibm.local.
