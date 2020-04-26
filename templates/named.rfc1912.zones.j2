@@ -40,8 +40,9 @@ zone "0.in-addr.arpa" IN {
 
 
 zone "ibm.local" IN {
-               type master;
-               file "{{ domain_name }}.zone";
-               allow-update { none; };
+        type master;
+        file "{{ domain_name }}.zone";
+        allow-update { none; };
+	forwarders {};
 };
 
