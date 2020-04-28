@@ -3,11 +3,10 @@
 
   - name: Installing named
     yum:
-      name: "{{ item }}"
+      name:
+        - bind
+        - bind-utils
       state: latest
-    with_items:
-      - bind-utils
-      - bind
 
   - name: Enable and Activate DNS Service
     service:
@@ -114,8 +113,8 @@
     lineinfile:      
       regex: '^(.*)nameserver 127.0.0.1(.*)'
       line: 'nameserver 127.0.0.1'
-      insertbefore: '^(.*)search(.*)'
-      firstmatch: true 
+      insertafter: '^(.*)search(.*)'
+      #firstmatch: true 
       path: "/etc/resolv.conf"
       state: present    
 
