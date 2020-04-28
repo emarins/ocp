@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cio_ignore -r c-e
-chccwdev -e c-e
+sudo /usr/sbin/cio_ignore -r c-e
+sudo /usr/sbin/chccwdev -e c-e
 
-/usr/sbin/vmur pun -r -u {{ guest_id }} -N kernel.img /var/ftp/pub/KERNEL.IMG
-/usr/sbin/vmur pun -r -u {{ guest_id }} -N generic.parm /var/ftp/pub/{{ parm_file }}
-/usr/sbin/vmur pun -r -u {{ guest_id }} -N initrd.img /var/ftp/pub/INITRD.IMG
+sudo /usr/sbin/vmur pun -r -u {{ guest_id }} -N kernel.img /var/ftp/pub/KERNEL.IMG
+sudo /usr/sbin/vmur pun -r -u {{ guest_id }} -N generic.parm /var/ftp/pub/{{ parm_file }}
+sudo /usr/sbin/vmur pun -r -u {{ guest_id }} -N initrd.img /var/ftp/pub/INITRD.IMG
