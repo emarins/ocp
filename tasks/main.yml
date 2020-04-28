@@ -54,7 +54,9 @@
 
   - name: Make DNS listen to Bastion IP
     lineinfile:
-      regex: 'listen-on port 53*'
+      regex: '^(.*)listen-on port 53(.*)'
+      #regex: 'listen-on port 53*'
+      firstmatch: true 
       line: "	listen-on port 53 { 127.0.0.1; {{ item.ip }}; };"
       state: present
       path: /etc/named.conf
@@ -64,10 +66,12 @@
     when:
       - item.role == "bastion_node"
 
-  - name: Allow DNS queries from  {{ dns_network }}
+  - name: Allow DNS queries from {{ dns_network }}
     lineinfile:                                       
       insertafter: "options {"
-      regex: '*allow-query*'                     
+      #firstmatch: true 
+      regex: '^(.*)allow-query(.*)'
+      #regex: '*allow-query*'                     
       line: "	allow-query     { localhost; {{ dns_network }}; };"
       state: present                                  
       path: /etc/named.conf                           
@@ -76,7 +80,9 @@
   - name: Allow DNS recursion from {{ dns_network }}
     lineinfile:
       insertafter: "options {"
-      regex: 'allow-recursion*'
+      #firstmatch: true 
+      regex: '^(.*)allow-recursion(.*)'
+      #regex: 'allow-recursion*'
       line: "	allow-recursion { 127.0.0.1; {{ dns_network }}; };"
       state: present
       path: /etc/named.conf
@@ -84,9 +90,11 @@
 
   - name: Allow DNS forwarders 
     lineinfile:
+      #firstmatch: true 
       insertafter: "options {"
-      regex: 'forwarders*'
-      line: "	forwarders { {{ dns1 }}; }"
+      #regex: 'forwarders*'
+      regex: '^(.*)forwarders(.*)'
+      line: "	forwarders { {{ dns1 }}; };"
       state: present
       path: /etc/named.conf
     notify: Restart DNS service
@@ -94,19 +102,19 @@
   - name: Allow DNS cache queries from {{ dns_network }}
     lineinfile:
       insertafter: "options {"
-      regex: 'allow-query-cache*'
+      #firstmatch: true 
+      regex: '^(.*)allow-query-cache(.*)'
+      #regex: 'allow-query-cache*'
       line: "	allow-query-cache { 127.0.0.1; {{ dns_network }}; };"
       state: present
       path: /etc/named.conf
     notify: Restart DNS service
 
-  # HERE
-  #
   - name: Update /etc/resolv.conf file
     lineinfile:      
       regex: '^(.*)nameserver 127.0.0.1(.*)'
       line: 'nameserver 127.0.0.1'
-      insertbefore: '^(.*)nameserver(.*)'
+      insertbefore: '^(.*)search(.*)'
       firstmatch: true 
       path: "/etc/resolv.conf"
       state: present    
