@@ -7,9 +7,9 @@ domain_reverse: 0.168.192.in-addr.arpa    # Reverse DNS zone for the DNS network
 defaultgw: 192.168.0.1            # Default gateway for the bootstrap server. Used for the PARM file
 netmask: 255.255.255.0         # Bootsstrap subnet mask. Used for the PARM file
 ipldisk: "0100"                # IPL disk address for the RHCOS instances. Used for the PARM file.
-rhcos_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # Bootstrap image name. Used for the PARM file and other things
-dns1: 8.8.8.8                # DNS forwarder addreses. Used in the DNS server /etc/named.conf 
-dns2: 8.8.4.4               # DNS forwarder addreses. Used in the DNS server /etc/named.conf  
+rhcos_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # RHCOS image name. Used for the PARM file and other things
+dns1: 8.8.8.8                # Primary DNS Server. Used in the DNS forwarder /etc/named.conf 
+dns2: 8.8.4.4                # Secondary DNS Server. Used in the DNS forwarder /etc/named.conf  
 vnic_addresses: "0.0.1000,0.0.1001,0.0.1002"           # VNIC addresses.  Used for PARM file. 
 vnic_layer2: 1                                         # Layer 2 information. Used in PARM file
 rhcos_kernel: rhcos-4.2.18-s390x-installer-kernel      # RHCOS kernel file. Used to build  bootstrap, master and worker nodes
