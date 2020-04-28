@@ -8,7 +8,7 @@
         - bind-utils
       state: latest
 
-  - name: Enable and Activate DNS Service
+  - name: Stop DNS Service
     service:
       name: named
       enabled: yes
@@ -170,6 +170,11 @@
       path: /etc/named.conf
     notify: Restart DNS service
 
+  - name: Enable and Activate DNS Service
+    service:         
+      name: named    
+      enabled: yes   
+      state: started 
 
   #- name: Query DNS records
   #  debug: 
