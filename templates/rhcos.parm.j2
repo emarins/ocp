@@ -1,0 +1,5 @@
+{% for bastion in all_nodes %}
+{% if bastion.role == "bastion_node" %}
+rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=dasda coreos.inst.image_url=ftp://{{ bastion.ip }}/pub/{{ rhcos_image }} coreos.inst.ignition_url=ftp://{{ bastion.ip }}/pub/{{ ign_file }} ip={{ server_ip }}::{{ defaultgw }}:{{ netmask }}:::none nameserver={{ bastion.ip }} rd.znet=qeth,{{ vnic_addresses }},layer2={{ vnic_layer2 }},portno=0 zfcp.allow_lun_scan=0 cio_ignore=all,!condev rd.dasd=0.0.{{ ipldisk }}
+{% endif %}
+{% endfor %}

@@ -3,8 +3,11 @@
 
   - name: Installing named
     yum:
-      name: "{{ dns_packages }}"
+      name: "{{ item }}"
       state: latest
+    with_items:
+      - bind-utils
+      - bind
 
   - name: Enable and Activate DNS Service
     service:
@@ -49,18 +52,22 @@
         };
     notify: Restart DNS service
 
-  - name: Make DNS listen to {{ bastion_server_ip }}
+  - name: Make DNS listen to Bastion IP
     lineinfile:
       regex: 'listen-on port 53*'
-      line: "	listen-on port 53 { 127.0.0.1; {{ bastion_server_ip }}; };"
+      line: "	listen-on port 53 { 127.0.0.1; {{ item.ip }}; };"
       state: present
       path: /etc/named.conf
     notify: Restart DNS service
+    with_items:
+      - "{{ all_nodes }}"
+    when:
+      - item.role == "bastion_node"
 
   - name: Allow DNS queries from  {{ dns_network }}
     lineinfile:                                       
       insertafter: "options {"
-      regex: 'allow-query*'                     
+      regex: '*allow-query*'                     
       line: "	allow-query     { localhost; {{ dns_network }}; };"
       state: present                                  
       path: /etc/named.conf                           
@@ -75,11 +82,11 @@
       path: /etc/named.conf
     notify: Restart DNS service
 
-  - name: Allow DNS forwarders to {{ dns_forwarders }} 
+  - name: Allow DNS forwarders 
     lineinfile:
       insertafter: "options {"
       regex: 'forwarders*'
-      line: "	forwarders { {{ dns_forwarders }} };"
+      line: "	forwarders { {{ dns1 }}; }"
       state: present
       path: /etc/named.conf
     notify: Restart DNS service
@@ -92,6 +99,51 @@
       state: present
       path: /etc/named.conf
     notify: Restart DNS service
+
+  # HERE
+  #
+  - name: Update /etc/resolv.conf file
+    lineinfile:      
+      regex: '^(.*)nameserver 127.0.0.1(.*)'
+      line: 'nameserver 127.0.0.1'
+      insertbefore: '^(.*)nameserver(.*)'
+      firstmatch: true 
+      path: "/etc/resolv.conf"
+      state: present    
+
+  - name: Update local Network Interfaces adding Bastion as preferable DNS server 1
+    lineinfile:              
+      regex: '^(.*)DNS1=(.*)'
+      line: 'DNS1=127.0.0.1'
+      path: "{{ item }}"
+      state: present         
+    with_fileglob:
+       - /etc/sysconfig/network-scripts/ifcfg-*
+    when:
+       - item !=  '/etc/sysconfig/network-scripts/ifcfg-lo'
+
+  - name: Update local Network Interfaces adding Bastion as preferable DNS server 2
+    lineinfile:                  
+      regex: '^(.*)DNS2=(.*)'
+      line: 'DNS2={{dns1}}'
+      path: "{{ item }}"
+      state: present        
+    with_fileglob:
+       - /etc/sysconfig/network-scripts/ifcfg-*
+    when:
+       - item !=  '/etc/sysconfig/network-scripts/ifcfg-lo'
+
+  - name: Update local Network Interfaces adding Bastion as preferable DNS server 3
+    lineinfile:                  
+      regex: '^(.*)DNS3=(.*)'
+      line: 'DNS3={{dns2}}'
+      path: "{{ item }}"
+      state: present        
+    with_fileglob:
+       - /etc/sysconfig/network-scripts/ifcfg-*
+    when:
+       - item !=  '/etc/sysconfig/network-scripts/ifcfg-lo'
+
 
   - name: Diasble dnssec-enable in /etc/named.conf
     lineinfile:
@@ -221,11 +273,97 @@
       - 443
       - 40000
 
+  - name: Generate a PARM file for each Master node in list
+    vars:
+     server_ip: "{{ item.ip }}"
+     ign_file: "master.ign"
+    template:
+      src: templates/rhcos.parm.j2
+      dest: "/var/ftp/pub/master-{{ item.id }}.parm"
+    with_items:
+      - "{{ all_nodes }}"
+    when:
+      - item.role == "control_node"
+
+  - name: Generate a PARM file for each Worker node in list
+    vars:                          
+     server_ip: "{{ item.ip }}"    
+     ign_file: "worker.ign"      
+    template:                      
+      src: templates/rhcos.parm.j2
+      dest: "/var/ftp/pub/worker-{{ item.id }}.parm"
+    with_items:                    
+      - "{{ all_nodes }}"          
+    when:                          
+      - item.role == "worker_node" 
+
+
+  - name: Generate a PARM file for each Bootstrap node in list
+    vars:                          
+     server_ip: "{{ item.ip }}"    
+     ign_file: "bootstrap.ign"      
+    template:                      
+      src: templates/rhcos.parm.j2
+      dest: "/var/ftp/pub/bootstrap-{{ item.id }}.parm"
+    with_items:                    
+      - "{{ all_nodes }}"          
+    when:                          
+      - item.role == "bootstrap_node" 
+
+  - name: Generate a VMUR script file for Master nodes
+    vars:
+     server_ip: "{{ item.ip }}"
+     guest_id: "{{ item.vmid }}"
+     parm_file: "master-{{ item.id }}.parm"
+    template:
+      mode: 0755
+      src: templates/punch.sh.j2
+      dest: "/var/ftp/pub/punch-master-{{ item.id }}.sh"
+    with_items:
+      - "{{ all_nodes }}"
+    when:
+      - item.role == "control_node"
+      #- item.role != "bastion_node"
+
+  - name: Generate a VMUR script file for Worker nodes
+    vars:
+     server_ip: "{{ item.ip }}"
+     guest_id: "{{ item.vmid }}"
+     parm_file: "worker-{{ item.id }}.parm"
+    template:
+      mode: 0755
+      src: templates/punch.sh.j2
+      dest: "/var/ftp/pub/punch-worker-{{ item.id }}.sh"
+    with_items:
+      - "{{ all_nodes }}"
+    when:
+      - item.role == "worker_node"
+
+  - name: Generate a VMUR script file for Bootstrap Node
+    vars:
+     server_ip: "{{ item.ip }}"
+     guest_id: "{{ item.vmid }}"
+     parm_file: "bootstrap-{{ item.id }}.parm"
+    template:
+      mode: 0755
+      src: templates/punch.sh.j2
+      dest: "/var/ftp/pub/punch-bootstrap-{{ item.id }}.sh"
+    with_items:
+      - "{{ all_nodes }}"
+    when:
+      - item.role == "bootstrap_node"
+
   - name: Deploy RHCOS.PARM file
+    vars:
+      bootstrap_ip: "{{ item.ip }}"
     template:
       src: templates/RHCOS.PARM.j2
       dest: /var/ftp/pub/RHCOS.PARM.ORI
       mode: 0644
+    with_items:    
+      - "{{ all_nodes }}"    
+    when:    
+      - item.role == "bootstrap_node" 
 
   - name: Breaking long lines with 80 chars on RHCOS.PARM file
     shell: | 

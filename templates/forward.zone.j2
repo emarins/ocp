@@ -1,46 +1,61 @@
 $TTL     1D
-@        IN  SOA {{ bastion_server_name }}.{{ cluster_name }}.{{ domain_name }}. root.{{ domain_name }}. (
+{% for node in all_nodes %}
+{% if node.role == "bastion_node" %}
+@        IN  SOA {{ node.name }}.{{ cluster_name }}.{{ domain_name }}. root.{{ domain_name }}. (
                       2019022400 ; serial
                       3h         ; refresh
                       15         ; retry
                       1w         ; expire
                       3h         ; minimum
                                                                             )
-
-        IN NS {{ bastion_server_name }}.{{ cluster_name }}.{{ domain_name}}.
-{{ bastion_server_name }}.{{ cluster_name }}  IN A {{ bastion_server_ip }}
+        IN NS {{ node.name }}.{{ cluster_name }}.{{ domain_name}}.
+{{ node.name }}.{{ cluster_name }}  IN A {{ node.ip }}
 
 ; The api points to the IP of your load balancer
-api.{{ cluster_name }} IN A {{ load_balancer }}
-api-int.{{ cluster_name }}  IN A {{ load_balancer }}
+api.{{ cluster_name }} IN A {{ node.ip }}
+api-int.{{ cluster_name }}  IN A {{ node.ip  }}
 
 ;
 ; The wildcard also points to the load balancer
-*.apps.{{ cluster_name }} IN A {{ load_balancer }}
+*.apps.{{ cluster_name }} IN A {{ node.ip }}
+{% endif %}
+{% endfor %}
 
 ;
 ; Create entry for the bootstrap host
-{{ bootstrap_server_name }}.{{ cluster_name }} IN A {{ bootstrap_server_ip }}
+{% for node in all_nodes %}
+{% if node.role == "bootstrap_node" %}
+{{ node.name }}.{{ cluster_name }} IN A {{ node.ip }}
+{% endif %}
+{% endfor %}
 
 ;
 ; Create entries for the worker hosts
-{% for compute in compute_servers %}
-{{ compute.name}}-{{ compute.id }}.{{ cluster_name }} IN A {{ compute.ip }}
+{% for node in all_nodes %}
+{% if node.role == "worker_node" %}
+{{ node.name }}.{{ cluster_name }} IN A {{ node.ip }}
+{% endif %}
 {% endfor %}
 
 
 ; Create entries for the master hosts
-{% for controlplane in control_plane_servers %}
-{{ controlplane.name}}-{{ controlplane.id }}.{{ cluster_name }} IN A {{ controlplane.ip }}
+{% for node in all_nodes %}
+{% if node.role == "control_node" %}
+{{ node.name}}.{{ cluster_name }} IN A {{ node.ip }}
+{% endif %}
 {% endfor %}
 
 ; etcd records
-{% for etcd in etcd_servers %}
-etcd-{{ etcd.id }}.{{ cluster_name }} IN A {{ etcd.ip }}
+{% for node in all_nodes %}
+{% if node.role == "etcd_node" %}
+{{ node.name }}.{{ cluster_name }} IN A {{ node.ip }}
+{% endif %}
 {% endfor %}
 
 ; OpenShift Container Platform also requires a SRV DNS record for etcd server on that machine with priority 0, weight 10 and port 2380. A cluster that uses three control plane machines requires the following records:
 ; _service._proto.name. TTL class SRV priority weight port target.
-{% for controlplane in etcd_servers %}
-_etcd-server-ssl._tcp.{{ cluster_name }} 86400 IN SRV 0 10 2380 etcd-{{ controlplane.id }}.{{ cluster_name }}.{{ domain_name}}.
+{% for node in all_nodes %}
+{% if node.role == "etcd_node" %}
+_etcd-server-ssl._tcp.{{ cluster_name }} 86400 IN SRV 0 10 2380 {{ node.name }}.{{ cluster_name }}.{{ domain_name}}.
+{% endif %}
 {% endfor %}

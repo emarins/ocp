@@ -4,60 +4,85 @@ domain_name: ibm.local       # Openshift domain name
 cluster_name: ocp4           # Openshift Cluster name
 dns_network: 192.168.0.0/24     # DNS network where bootstrap, master and worker nodes will reside
 domain_reverse: 0.168.192.in-addr.arpa    # Reverse DNS zone for the DNS network. Used for DNS reverse zone
-bastion_server_name: infraserver  # Name of the bastion server (HAPROXY). USed for DNS forward zone.
-bastion_server_ip: 192.168.0.33      # IP address of the bastion server (HAPROXY). Used for DNS forward zone and PARM file.
-bootstrap_server_name: bootstrap         # Name of the bootstrap server. Used for the DNS forward zone
-bootstrap_server_ip: 192.168.0.23           # Ip address of the bootstrap server. Used for the PARM file
-bootstrap_defaultgw: 192.168.0.1            # Default gateway for the bootstrap server. Used for the PARM file
-bootstrap_netmask: 255.255.255.0         # Bootsstrap subnet mask. Used for the PARM file
-bootstrap_ipldisk: "0100"                # IPL disk address for the RHCOS instances. Used for the PARM file.
-bootstrap_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # Bootstrap image name. Used for the PARM file and other things
-dns_forwarders: "8.8.8.8; 8.8.4.4;"               # DNS forwarder addreses. Used in the DNS server /etc/named.conf  
+defaultgw: 192.168.0.1            # Default gateway for the bootstrap server. Used for the PARM file
+netmask: 255.255.255.0         # Bootsstrap subnet mask. Used for the PARM file
+ipldisk: "0100"                # IPL disk address for the RHCOS instances. Used for the PARM file.
+rhcos_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # Bootstrap image name. Used for the PARM file and other things
+dns1: 8.8.8.8                # DNS forwarder addreses. Used in the DNS server /etc/named.conf 
+dns2: 8.8.4.4               # DNS forwarder addreses. Used in the DNS server /etc/named.conf  
 vnic_addresses: "0.0.1000,0.0.1001,0.0.1002"           # VNIC addresses.  Used for PARM file. 
 vnic_layer2: 1                                         # Layer 2 information. Used in PARM file
 rhcos_kernel: rhcos-4.2.18-s390x-installer-kernel      # RHCOS kernel file. Used to build  bootstrap, master and worker nodes
 rhcos_initrd: rhcos-4.2.18-s390x-installer-initramfs.img # RHCOS initrd file. Used to build bootstrap, master and worker nodes
-openshift_installer: openshift-install-linux-4.2.23.tar.gz  # Openshift installer file name.  Used to install Openshift 
-openshift_client: openshift-client-linux-4.2.23.tar.gz      # Openshift Client file name.  Used to manage Openshift Cluster.
+openshift_installer: openshift-install-linux.tar.gz  # Openshift installer file name.  Used to install Openshift 
+openshift_client: openshift-client-linux.tar.gz      # Openshift Client file name.  Used to manage Openshift Cluster.
 ocp_stage_dir: /stage                    # Temporary folder that will be used to install Openshift
 worker_replicas: 2                       # Number of worker nodes
-
-control_plane_servers:                   # Master nodes information. In this example we have 3 master nodes
-  - id: 1
-    name: master1
-    ip: 192.168.0.24
-  - id: 2
-    name: master2
-    ip: 192.168.0.25
-  - id: 3
-    name: master3
-    ip: 192.168.0.26
-
-compute_servers:                         # Worker nodes information, In this example we have 3 master nodes
-  - id: 1
-    name: worker1
-    ip: 192.168.0.27
-  - id: 2
-    name: worker2
-    ip: 192.168.0.28
-
-etcd_servers:                            # ETCD information. Used for DNS forward Zone.
-  - id: 0  
-    name: etcd-0 
-    ip: 192.168.0.24
-  - id: 1
-    name: etcd-1
-    ip: 192.168.0.25
-  - id: 2
-    name: etcd-2
-    ip: 192.168.0.26
-
-dns_packages:                            # DNS package names.  It is used to install DNS package
-  - bind-utils
-  - bind
-
 ocp_download_dir: /opt/downloads       # Where you need to put the downloaded file from REDHAT site
 
 ocp_files:                               # RHCOS file names
   - rhcos-4.2.18-s390x-metal-dasd.raw.gz
   - rhcos-4.2.18-s390x-metal-zfcp.raw.gz
+
+all_nodes:                   # Master nodes information. In this example we have 3 master nodes
+  # Master Nodes
+  - id: 1
+    name: master1
+    ip: 192.168.0.24
+    vmid: RHOCPM01
+    role: control_node
+
+  - id: 2
+    name: master2
+    ip: 192.168.0.25
+    vmid: RHOCPM02
+    role: control_node
+
+  - id: 3
+    name: master3
+    ip: 192.168.0.26
+    vmid: RHOCPM03
+    role: control_node
+
+  # Workers Nodes
+  - id: 1
+    name: worker1
+    ip: 192.168.0.27
+    vmid: RHOCPW01
+    role: worker_node
+
+  - id: 2
+    name: worker2
+    ip: 192.168.0.28
+    vmid: RHOCPW01
+    role: worker_node
+
+  # Bootstrap
+  - id: 0
+    name: bootstrap
+    ip: 192.168.0.23
+    vmid: RHOCPB00
+    role: bootstrap_node
+
+  # Bastion
+  - id: 0
+    name: rh8serv1
+    ip: 192.168.0.33
+    vmid: RH8SERV1
+    role: bastion_node
+
+  # etcd
+  - id: 0
+    name: etcd-0
+    ip: 192.168.0.24   # Same as Master node 1
+    role: etcd_node
+
+  - id: 1
+    name: etcd-1
+    ip: 192.168.0.25   # Same as Master node 2
+    role: etcd_node
+
+  - id: 2
+    name: etcd-2
+    ip: 192.168.0.26   # Same as Master node 3
+    role: etcd_node

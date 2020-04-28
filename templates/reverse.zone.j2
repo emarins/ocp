@@ -1,5 +1,7 @@
 $TTL     1D
-@        IN  SOA {{ bastion_server_name }}.{{ cluster_name }}.{{ domain_name }}. root.{{ domain_name }}. (
+{% for node in all_nodes %}
+{% if node.role == "bastion_node" %}
+@        IN  SOA {{ node.name }}.{{ cluster_name }}.{{ domain_name }}. root.{{ domain_name }}. (
                       2019022400 ; serial
                       3h         ; refresh
                       15         ; retry
@@ -7,20 +9,31 @@ $TTL     1D
                       3h         ; minimum
                                                                             )
 
-         IN NS {{ bastion_server_name }}.{{ cluster_name }}.{{ domain_name}}.
+         IN NS {{ node.name }}.{{ cluster_name }}.{{ domain_name}}.
 
 ; Create entry for the bastion host
-{{ bastion_server_ip.split('.')[3] }} IN PTR {{ bastion_server_name }}.{{ cluster_name }}.{{ domain_name }}.
+{{ node.ip.split('.')[3] }} IN PTR {{ node.name }}.{{ cluster_name }}.{{ domain_name }}.
+{% endif %}
+{% endfor %}
+
+;
+; Create entry for the bootstrap host
+{% for node in all_nodes %}
+{% if node.role == "bootstrap_node" %}
+{{ node.ip.split('.')[3] }} IN PTR {{ node.name }}.{{ cluster_name }}.{{ domain_name }}.
+{% endif %}
+{% endfor %}
 
 ; Create entries for the worker hosts
-{% for compute in compute_servers %}
-{{ compute.ip.split('.')[3] }} IN PTR {{ compute.name }}{{ compute.id }}.{{ cluster_name }}.{{ domain_name }}.
+{% for node in all_nodes %}
+{% if node.role == "worker_node" %}
+{{ node.ip.split('.')[3] }} IN PTR {{ node.name }}.{{ cluster_name }}.{{ domain_name }}.
+{% endif %}
 {% endfor %}
 
 ; Create entries for the master hosts
-{% for controlplane in control_plane_servers %}
-{{ controlplane.ip.split('.')[3] }} IN PTR {{ controlplane.name }}{{ controlplane.id }}.{{ cluster_name }}.{{ domain_name }}.
+{% for node in all_nodes %}
+{% if node.role == "control_node" %}
+{{ node.ip.split('.')[3] }} IN PTR {{ node.name }}.{{ cluster_name }}.{{ domain_name }}.
+{% endif %}
 {% endfor %}
-
-; Create entry for the bootstrap host
-{{ bootstrap_server_ip.split('.')[3] }} IN PTR {{ bootstrap_server_name }}.{{ cluster_name }}.{{ domain_name }}.

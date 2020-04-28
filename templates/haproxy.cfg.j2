@@ -57,9 +57,10 @@ frontend openshift-api-server
 backend openshift-api-server
     balance source
     mode tcp
-    server bootstrap {{ bootstrap_server_ip }}:6443 check
-{% for master in control_plane_servers %}
-    server master{{master.id}} {{ master.ip }}:6443  check
+{% for node in all_nodes %}
+{% if node.role == "control_node" or node.role == "bootstrap_node" %}
+    server {{node.name}} {{node.ip}}:6443 check
+{% endif %}
 {% endfor %}
 
 frontend machine-config-server
@@ -71,9 +72,10 @@ frontend machine-config-server
 backend machine-config-server
     balance source
     mode tcp
-    server bootstrap {{bootstrap_server_ip}}:22623 check
-{% for master in control_plane_servers  %}
-    server master{{master.id}} {{master.ip}}:22623  check
+{% for node in all_nodes %}
+{% if node.role == "control_node" or node.role == "bootstrap_node" %}
+    server {{node.name}} {{ node.ip }}:22623  check
+{% endif %}
 {% endfor %}
 
 frontend hafrontend-http
@@ -91,27 +93,33 @@ frontend hafrontend-https
 backend habackend-http
     mode tcp
     balance roundrobin
-    #option httpchk HEAD / HTTP/1.1\r\nHost:localhost
-    #cookie SERVERID insert indirect
 {% if worker_replicas > 0 %}
-  {% for compute in compute_servers %}
-  server worker{{compute.id}} {{ compute.ip }}:80 check
-  {% endfor %}
+{% for node in all_nodes %}
+{% if node.role == "worker_node" %}
+    server {{node.name}} {{ node.ip }}:80  check
+{% endif %}
+{% endfor %}
 {% else %}
-  {% for master in control_plane_servers  %}
-  server master{{master.id}} {{master.ip}}:80 check 
-  {% endfor %}
+{% for node in all_nodes %}
+{% if node.role == "control_node" %}
+    server {{node.name}} {{ node.ip }}:80  check
+{% endif %}
+{% endfor %}
 {% endif %}
 
 backend habackend-https
     balance roundrobin
     mode tcp
 {% if worker_replicas > 0 %}
-  {% for compute in compute_servers %}
-  server worker{{compute.id}} {{ compute.ip }}:443 check
-  {% endfor %}
+{% for node in all_nodes %}
+{% if node.role == "worker_node" %}
+    server {{node.name}} {{ node.ip }}:443  check
+{% endif %}
+{% endfor %}
 {% else %}
-  {% for master in control_plane_servers  %}
-  server master{{master.id}} {{master.ip}}:443  check 
-  {% endfor %}
+{% for node in all_nodes %}
+{% if node.role == "control_node" %}
+    server {{node.name}} {{ node.ip }}:443  check
+{% endif %}
+{% endfor %}
 {% endif %}
