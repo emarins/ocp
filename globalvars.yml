@@ -10,7 +10,7 @@ ipldisk: "0100"                # IPL disk address for the RHCOS instances. Used 
 rhcos_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # RHCOS image name. Used for the PARM file and other things
 dns1: 8.8.8.8                # Primary DNS Server. Used in the DNS forwarder /etc/named.conf 
 dns2: 8.8.4.4                # Secondary DNS Server. Used in the DNS forwarder /etc/named.conf  
-vnic_addresses: "0.0.1000,0.0.1001,0.0.1002"           # VNIC addresses.  Used for PARM file. 
+vnic_addresses: "0.0.1000,0.0.1001,0.0.1002"  # Virtual Network Interface (VNIC). Check NICDEF server VM directory to fill out this field.Used for PARM file. 
 vnic_layer2: 1                                         # Layer 2 information. Used in PARM file
 rhcos_kernel: rhcos-4.2.18-s390x-installer-kernel      # RHCOS kernel file. Used to build  bootstrap, master and worker nodes
 rhcos_initrd: rhcos-4.2.18-s390x-installer-initramfs.img # RHCOS initrd file. Used to build bootstrap, master and worker nodes
