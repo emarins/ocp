@@ -54,7 +54,7 @@ all_nodes:                   # Master nodes information. In this example we have
   - id: 2
     name: worker2
     ip: 192.168.0.28
-    vmid: RHOCPW01
+    vmid: RHOCPW02
     role: worker_node
 
   # Bootstrap
