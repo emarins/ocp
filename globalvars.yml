@@ -4,8 +4,8 @@ domain_name: ibm.local       # Openshift domain name
 cluster_name: ocp4           # Openshift Cluster name
 dns_network: 192.168.0.0/24     # DNS network where bootstrap, master and worker nodes will reside
 domain_reverse: 0.168.192.in-addr.arpa    # Reverse DNS zone for the DNS network. Used for DNS reverse zone
-defaultgw: 192.168.0.1            # Default gateway for the bootstrap server. Used for the PARM file
-netmask: 255.255.255.0         # Bootsstrap subnet mask. Used for the PARM file
+defaultgw: 192.168.0.1            # Default gateway for the cluster network. Used for the PARM file
+netmask: 255.255.255.0         # Network subnet mask. Used for the PARM file
 ipldisk: "0100"                # IPL disk address for the RHCOS instances. Used for the PARM file.
 rhcos_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # RHCOS image name. Used for the PARM file and other things
 dns1: 8.8.8.8                # Primary DNS Server. Used in the DNS forwarder /etc/named.conf 
@@ -24,7 +24,7 @@ ocp_files:                               # RHCOS file names
   - rhcos-4.2.18-s390x-metal-dasd.raw.gz
   - rhcos-4.2.18-s390x-metal-zfcp.raw.gz
 
-all_nodes:                   # Master nodes information. In this example we have 3 master nodes
+all_nodes:                   # Master, Worker, bootstrap and other nodes information.
   # Master Nodes
   - id: 1
     name: master1
