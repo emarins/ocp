@@ -1,0 +1,26 @@
+---
+nfs_registry_folder: /exports/OCP_registry
+nfs_registry_pvc: nfs-registry-claim1
+
+ocp_hosts:
+  - master1.ocp4.ibm.local 
+  - master2.ocp4.ibm.local 
+  - master3.ocp4.ibm.local 
+  - worker1.ocp4.ibm.local 
+  - worker2.ocp4.ibm.local 
+
+nfs_exports:        
+  - name: exports
+    dir: /exports
+    opts: "(rw,fsid=0,insecure,no_subtree_check,async)"
+    root: yes
+
+  - name: OCP_registry_nfs
+    dir: /exports/OCP_registry
+    opts: "(rw,sync,no_wdelay,no_root_squash,insecure,fsid=0)"
+    root: no
+
+  - name: OCP_pv1_nfs
+    dir: /export/OCP_pv1
+    opts: "(rw,sync,no_wdelay,no_root_squash,insecure,fsid=0)"
+    root: no

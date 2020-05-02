@@ -1,0 +1,17 @@
+{% for node in all_nodes %}
+{% if node.role == "bastion_node" %}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: registry-pv0001
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: {{ nfs_registry_folder }} 
+    server: {{ node.ip }}
+  persistentVolumeReclaimPolicy: Retain
+{% endif %}
+{% endfor %}

@@ -1,0 +1,77 @@
+---
+- name: Install and Configure NFS server
+  hosts: ocp
+  become: yes
+
+  vars_files:
+    - nfs.yml
+    - globalvars.yml
+
+  handlers:
+
+    - name: Reload /etc/exports
+      command: exportfs -a
+
+  tasks:
+
+    - name: Install nfs-utils via yum
+      yum:
+        name: nfs-utils
+        state: latest
+
+    - name: Setup firewall for NFS
+      firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      with_items:
+        - nfs
+        - rpc-bind
+        - mountd
+
+    - name: Create NFS directories
+      file:
+        state: directory
+        mode: 0755
+        path: "{{ item.dir }}"
+      with_items:
+        - "{{ nfs_exports }}"
+
+    - name: Update /etc/exports
+      lineinfile:
+        line: "{{ item[0].dir }} {{ item[1] }}{{ item[0].opts }}"
+        path: /etc/exports
+        state: present
+        owner: root
+        group: root
+        mode: '0644'
+        create: yes
+      with_nested:
+        - "{{ nfs_exports }}"
+        - "{{ ocp_hosts }}"
+      notify: Reload /etc/exports
+
+    - name: Enable and Start nfs service
+      service:
+        name: nfs-server
+        state: started
+        enabled: yes 
+
+    - name: Create /var/ftp/pub/registry_nfs_pv.yml
+      template:
+        src: registry_nfs_pv.j2
+        dest: /var/ftp/pub/registry_nfs_pv.yml
+        owner: automation
+        group: automation
+        mode: '0644'
+
+    - name: Create /var/ftp/pub/registry_nfs_pvc.yml
+      template:
+        src: registry_nfs_pvc.j2
+        dest: /var/ftp/pub/registry_nfs_pvc.yml
+        owner: automation
+        group: automation
+        mode: '0644'
+
+
