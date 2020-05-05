@@ -1,0 +1,8 @@
+USER RH8SERV1 REDHAT 8G 8G G                                            01102153
+   INCLUDE DFLTLNX                                                      01102153
+   CPU 00 BASE                                                          01102153
+   IPL CMS                                                              01102153
+   POSIXINFO UID 100915                                                 01102153
+   NICDEF 1000 TYPE QDIO LAN SYSTEM VSWITCH1 MACID 0EB2AB               01102153
+   NICDEF 1000 VLAN 2810                                                01102153
+   MDISK 0100 3390 0001 60100 LXBKAO M                                  01102155

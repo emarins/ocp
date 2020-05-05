@@ -1,0 +1,12 @@
+USER RHOCPB00 REDHAT 16G 16G G                                          03101807
+   INCLUDE DFLTLNX                                                      03101807
+   CPU 00 BASE                                                          03101807
+   CPU 01                                                               03101807
+   CPU 02                                                               03101807
+   CPU 03                                                               03101807
+   IPL 100                                                              03101807
+   POSIXINFO   UID 100754                                               03101807
+   NICDEF 1000 TYPE QDIO LAN SYSTEM VSWITCH1                            03101807
+   NICDEF 1000 VLAN 2810                                                03101807
+   MDISK 0100 3390 0001 60101 LXBKAG M                                  03101807
+   MDISK 0199 3390 0001 3338 LXBKAC M                                   03101807

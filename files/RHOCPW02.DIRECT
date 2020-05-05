@@ -1,0 +1,9 @@
+USER RHOCPW02 REDHAT 8G 8G G                                            03101700
+   INCLUDE DFLTLNX                                                      03101514
+   CPU 00 BASE                                                          03101514
+   CPU 01                                                               03101514
+   IPL 100                                                              03101839
+   POSIXINFO   UID 100754                                               03101514
+   NICDEF 1000 TYPE QDIO LAN SYSTEM VSWITCH1                            03101514
+   NICDEF 1000 VLAN 2810                                                03101514
+   MDISK 0100 3390 0001 60101 LXBNBQ M                                  03101514

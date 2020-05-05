@@ -21,6 +21,6 @@ nfs_exports:
     root: no
 
   - name: OCP_pv1_nfs
-    dir: /export/OCP_pv1
+    dir: /exports/OCP_pv1
     opts: "(rw,sync,no_wdelay,no_root_squash,insecure,fsid=0)"
     root: no
