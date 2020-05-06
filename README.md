@@ -36,11 +36,11 @@ Role Variables
 
 Default role variables are liste bellow. Those variables define the Binary files needed for Openshift and the prerequisit Open Source software. This role installs and all necessary Linux services in one Red Hat 8 server.
 
-  # Openshift domain name
-    domain_name: ibm.local       # Update with your Openshift domain name
+  # Openshift domain name. Update with your Openshift domain name.
+    domain_name: ibm.local
 
-  # Openshift Cluster name
-    cluster_name: ocp4           # Update with your Openshift cluster name.  This name will compose the FQDN.
+  # Openshift Cluster name. Update with your Openshift cluster name.  This name will compose the FQDN.
+    cluster_name: ocp4
 
   # The result of cluster name and domain name above will be ocp4.ibm.local.
 
