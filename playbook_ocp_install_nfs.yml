@@ -58,9 +58,15 @@
         state: started
         enabled: yes 
 
+    - debug:
+        msg: |
+          "emarins.ocp role should be downloaded to {{ ansible_facts.env['PWD'] }}/ocp/roles/"
+          Issue ansible-galaxy install -p {{ ansible_facts.env['PWD'] }}/ocp/roles/
+          Otherwise this playbook will not work.
+
     - name: Create /var/ftp/pub/registry_nfs_pv.yml
       template:
-        src: registry_nfs_pv.j2
+        src: "{{ ansible_facts.env['PWD'] }}/ocp/roles/emarins.ocp/templates/registry_nfs_pv.j2"
         dest: /var/ftp/pub/registry_nfs_pv.yml
         owner: automation
         group: automation
@@ -68,7 +74,7 @@
 
     - name: Create /var/ftp/pub/registry_nfs_pvc.yml
       template:
-        src: registry_nfs_pvc.j2
+        src: "{{ ansible_facts.env['PWD'] }}/ocp/roles/emarins.ocp/templates/registry_nfs_pvc.j2"
         dest: /var/ftp/pub/registry_nfs_pvc.yml
         owner: automation
         group: automation
