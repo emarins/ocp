@@ -269,7 +269,7 @@
     service:
       name: haproxy
       enabled: yes
-      state: started
+      state: restarted
     
   - name: Enable haproxy firewall rules
     firewalld:
