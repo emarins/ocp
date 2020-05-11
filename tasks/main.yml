@@ -241,12 +241,12 @@
       mode: 0755
       path: /var/ftp/pub
 
-  - name: Copying files from ansible to /var/ftp/pub on remote server
+  - name: Copying RHCOS image from ansible to /var/ftp/pub on the bastion server
     copy:
       src: "{{ item }}"
       dest: /var/ftp/pub
     with_fileglob:
-      - "{{ ocp_download_dir }}/rhcos*.gz"
+      - "{{ ocp_download_dir }}/{{rhcos_image }}"
 
   - name: Install haproxy
     yum:

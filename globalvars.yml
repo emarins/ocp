@@ -20,9 +20,9 @@ ocp_stage_dir: /stage                    # Temporary folder that will be used to
 worker_replicas: 2                       # Number of worker nodes. Recommended is two worker nodes. It will automatically update HAPROXY accordingly.
 ocp_download_dir: /opt/downloads       # Where you need to put the instalation files that were downloaded from REDHAT portal
 
-ocp_files:                               # RHCOS file names. Update with the latest file names.
-  - rhcos-4.2.18-s390x-metal-dasd.raw.gz
-  - rhcos-4.2.18-s390x-metal-zfcp.raw.gz
+#ocp_files:                               # RHCOS file names. Update with the latest file names.
+#  - rhcos-4.2.18-s390x-metal-dasd.raw.gz
+#  - rhcos-4.2.18-s390x-metal-zfcp.raw.gz
 
 all_nodes:               # Master, Worker, bootstrap and other nodes information.
   # Master Nodes
