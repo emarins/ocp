@@ -2,23 +2,23 @@
 
 domain_name: ibm.local       # Openshift domain name
 cluster_name: ocp4           # Openshift Cluster name
-dns_network: 192.168.0.0/24     # DNS network where bootstrap, master and worker nodes will reside. Ask Network team if you do not know how to get it.
-domain_reverse: 0.168.192.in-addr.arpa    # Reverse DNS zone for the DNS network. Used for DNS reverse zone. Ask Network team if you do not know how to get it.
+dns_network: 192.168.0.0/24  # DNS network where bootstrap, master and worker nodes will reside. Ask Network team if you do not know how to get it.
+domain_reverse: 0.168.192.in-addr.arpa    # Reverse DNS zone for your network. Ask Network team if you do not know how to get it.
 defaultgw: 192.168.0.1      # Default gateway for the cluster network. Ask Network team if you do not know how to get it. Used for the PARM file
 netmask: 255.255.255.0      # Network subnet mask. Used for the PARM file. Ask Network team if you do not know how to get it.
-ipldisk: "0100"             # IPL disk address for the RHCOS instances. Update with the disk that will be used to install RHCOS. Used for the PARM file.
-rhcos_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # RHCOS image name. Used for the PARM file and other things
+ipldisk: "0100"             # IPL disk address for the RHCOS instances. Disk for RHCOS installation. Used in the PARM file.
 dns1: 8.8.8.8               # Primary DNS Server. Used in the DNS forwarder /etc/named.conf 
 dns2: 8.8.4.4               # Secondary DNS Server. Used in the DNS forwarder /etc/named.conf  
 vnic_addresses: "0.0.1000,0.0.1001,0.0.1002"  # Virtual Network Interface (VNIC). Ask your zVM admin for support if you do not know how to find it. 
 vnic_layer2: 1              # Layer 2 information. Ask network team if you do not know how to get it. Used in PARM file
+ocp_download_dir: /opt/downloads       # Where you need to put the instalation files that were downloaded from REDHAT portal
 rhcos_kernel: rhcos-4.2.18-s390x-installer-kernel      # RHCOS kernel file. Used to build  bootstrap, master and worker nodes
 rhcos_initrd: rhcos-4.2.18-s390x-installer-initramfs.img # RHCOS initrd file. Used to build bootstrap, master and worker nodes
+rhcos_image: rhcos-4.2.18-s390x-metal-dasd.raw.gz  # RHCOS image name. Used for the PARM file and other things
 openshift_installer: openshift-install-linux.tar.gz  # Openshift installer file name.  Used to install Openshift 
 openshift_client: openshift-client-linux.tar.gz      # Openshift Client file name.  Used to manage Openshift Cluster.
+worker_replicas: 0                       # Number of worker nodes. Recommended is two worker nodes. It will automatically update HAPROXY accordingly.
 ocp_stage_dir: /stage                    # Temporary folder that will be used to install Openshift
-worker_replicas: 2                       # Number of worker nodes. Recommended is two worker nodes. It will automatically update HAPROXY accordingly.
-ocp_download_dir: /opt/downloads       # Where you need to put the instalation files that were downloaded from REDHAT portal
 
 all_nodes:               # Master, Worker, bootstrap and other nodes information.
   # Master Nodes
