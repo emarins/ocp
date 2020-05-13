@@ -1,0 +1,14 @@
+---
+  - name: Playbook Monitor Installation
+    hosts: ocp
+    become: yes
+
+  tasks:
+
+    - name: wait for bootstrap complete
+      tags: config
+      shell: openshift-install --dir=`pwd` wait-for bootstrap-complete --log-level debug
+        args:
+          chdir: "{{ workdir }}"
+      retries: 1
+      delay: 0

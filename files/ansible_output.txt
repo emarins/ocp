@@ -1,0 +1,341 @@
+[automation@ansible1 ocp]$ ansible-playbook playbook_ocp.yml 
+
+PLAY [Playbook to install OCP on Z] ***********************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Installing named] *********************************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable and Activate DNS Service] ******************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable firewall rules] ****************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy forward DNS zone] **************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy reverse DNS zone] **************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Adding Forward and Reverse zones into /etc/named.rfc1912.zones] ***********************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Make DNS listen to Bastion IP] ********************************************************************************************************
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'}) 
+changed: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Allow DNS queries from 9.16.8.0/24] ***************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Allow DNS recursion from 9.16.8.0/24] *************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Allow DNS forwarders] *****************************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Allow DNS cache queries from 9.16.8.0/24] *********************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Update /etc/resolv.conf file] *********************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Update local Network Interfaces adding Bastion as preferable DNS server 1] ************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item=/etc/sysconfig/network-scripts/ifcfg-enc1000)
+skipping: [ansible3.ahe.boulder.ibm.com] => (item=/etc/sysconfig/network-scripts/ifcfg-lo) 
+
+TASK [emarins.ocp : Update local Network Interfaces adding Bastion as preferable DNS server 2] ************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item=/etc/sysconfig/network-scripts/ifcfg-enc1000)
+skipping: [ansible3.ahe.boulder.ibm.com] => (item=/etc/sysconfig/network-scripts/ifcfg-lo) 
+
+TASK [emarins.ocp : Update local Network Interfaces adding Bastion as preferable DNS server 3] ************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item=/etc/sysconfig/network-scripts/ifcfg-enc1000)
+skipping: [ansible3.ahe.boulder.ibm.com] => (item=/etc/sysconfig/network-scripts/ifcfg-lo) 
+
+TASK [emarins.ocp : Diasble dnssec-enable in /etc/named.conf] *********************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Disable dnssec-validation in /etc/named.conf] *****************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Install vsftpd] ***********************************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable and Activate vsftpd Service] ***************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable ftp firewall rules] ************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Setting ftpd_use_passive_mode to on] **************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable anonymous access for vsftpd service] *******************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable passive mode on 40000 port into /etc/vsftpd/vsftpd.conf] ***********************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable haproxy firewall rules] ********************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item=40000)
+ok: [ansible3.ahe.boulder.ibm.com] => (item=21)
+
+TASK [emarins.ocp : Create /var/ftp/pub directory] ********************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Copying files from ansible to /var/ftp/pub on remote server] **************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item=/opt/downloads/rhcos-4.2.18-s390x-metal-zfcp.raw.gz)
+ok: [ansible3.ahe.boulder.ibm.com] => (item=/opt/downloads/rhcos-4.2.18-s390x-metal-dasd.raw.gz)
+
+TASK [emarins.ocp : Install haproxy] **********************************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Setting haproxy_connect_any to on] ****************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy /etc/haproxy/haproxy.cfg] ******************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable and Activate haproxy Service] **************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Enable haproxy firewall rules] ********************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item=80)
+ok: [ansible3.ahe.boulder.ibm.com] => (item=22623)
+ok: [ansible3.ahe.boulder.ibm.com] => (item=6443)
+ok: [ansible3.ahe.boulder.ibm.com] => (item=8404)
+ok: [ansible3.ahe.boulder.ibm.com] => (item=443)
+ok: [ansible3.ahe.boulder.ibm.com] => (item=40000)
+
+TASK [emarins.ocp : Generate a PARM file for each Master node in list] ************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'})
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'})
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Generate a PARM file for each Worker node in list] ************************************************************************************
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'}) 
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'})
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Generate a PARM file for each Bootstrap node in list] *********************************************************************************
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Generate a VMUR script file for Master nodes] *****************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'})
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'})
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Generate a VMUR script file for Worker nodes] *****************************************************************************************
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'}) 
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'})
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Generate a VMUR script file for Bootstrap Node] ***************************************************************************************
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Deploy RHCOS.PARM file] ***************************************************************************************************************
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'master1', 'ip': '9.16.8.24', 'vmid': 'RHOCPM01', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'master2', 'ip': '9.16.8.25', 'vmid': 'RHOCPM02', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 3, 'name': 'master3', 'ip': '9.16.8.26', 'vmid': 'RHOCPM03', 'role': 'control_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'worker1', 'ip': '9.16.8.27', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'worker2', 'ip': '9.16.8.28', 'vmid': 'RHOCPW01', 'role': 'worker_node'}) 
+ok: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'bootstrap', 'ip': '9.16.8.23', 'vmid': 'RHOCPB00', 'role': 'bootstrap_node'})
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'rh8serv1', 'ip': '9.16.8.33', 'vmid': 'RH8SERV1', 'role': 'bastion_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 0, 'name': 'etcd-0', 'ip': '9.16.8.24', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 1, 'name': 'etcd-1', 'ip': '9.16.8.25', 'role': 'etcd_node'}) 
+skipping: [ansible3.ahe.boulder.ibm.com] => (item={'id': 2, 'name': 'etcd-2', 'ip': '9.16.8.26', 'role': 'etcd_node'}) 
+
+TASK [emarins.ocp : Breaking long lines with 80 chars on RHCOS.PARM file] *********************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Debug output] *************************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => {
+    "msg": {
+        "changed": true,
+        "cmd": "cat /var/ftp/pub/RHCOS.PARM.ORI |\nawk -v WIDTH=80 '\n{\n  gsub(\"\\t\",\" \")\n  $0 = line $0\n  while (length <= WIDTH) {\n    line = $0\n    more = getline\n    gsub(\"\\t\",\" \")\n    if (more)\n      $0 = line \"\" $0\n    else\n      $0 = line\n      break\n  }\n  while (length >= WIDTH) {\n    print substr($0,1,WIDTH)\n    $0 = substr($0,WIDTH+1)\n  }\n  line = $0 \" \"\n}\n\nEND {\n  print\n}\n' | tee /var/ftp/pub/RHCOS.PARM\n",
+        "delta": "0:00:00.005246",
+        "end": "2020-04-28 08:38:36.861496",
+        "failed": false,
+        "rc": 0,
+        "start": "2020-04-28 08:38:36.856250",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=dasda coreos.inst.image_url\n=ftp://9.16.8.33/pub/rhcos-4.2.18-s390x-metal-dasd.raw.gz  coreos.inst.ignition_\nurl=ftp://9.16.8.33/pub/bootstrap-0.ign nameserver=9.16.8.33 ip=9.16.8.23::9.16.\n8.1:255.255.255.0:::none rd.znet=qeth,0.0.1000,0.0.1001,0.0.1002,layer2=1,portno\n=0 zfcp.allow_lun_scan=0 cio_ignore=all,!condev rd.dasd=0.0.0100",
+        "stdout_lines": [
+            "rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=dasda coreos.inst.image_url",
+            "=ftp://9.16.8.33/pub/rhcos-4.2.18-s390x-metal-dasd.raw.gz  coreos.inst.ignition_",
+            "url=ftp://9.16.8.33/pub/bootstrap-0.ign nameserver=9.16.8.33 ip=9.16.8.23::9.16.",
+            "8.1:255.255.255.0:::none rd.znet=qeth,0.0.1000,0.0.1001,0.0.1002,layer2=1,portno",
+            "=0 zfcp.allow_lun_scan=0 cio_ignore=all,!condev rd.dasd=0.0.0100"
+        ]
+    }
+}
+
+TASK [emarins.ocp : Deploy RHCOS.EXEC] ********************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy rhcos-4.2.18-s390x-installer-kernel file] **************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy rhcos-4.2.18-s390x-installer-initramfs.img file] *******************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy openshift-install-linux.tar.gz file] *******************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy openshift-client-linux.tar.gz file] ********************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Cleanup /stage] ***********************************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Create /stage] ************************************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Unzip openshift-install-linux.tar.gz to /stage] ***************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Unzip openshift-client-linux.tar.gz to /usr/local/bin] ********************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Deploy install-config.yaml] ***********************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Create backup of install-config.yaml] *************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Generate the Kubernetes manifests for the cluster] ************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Debug - create manifests] *************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => {
+    "command_output": {
+        "changed": true,
+        "cmd": "./openshift-install create manifests --dir=/stage",
+        "delta": "0:00:01.687297",
+        "end": "2020-04-28 08:38:54.882644",
+        "failed": false,
+        "rc": 0,
+        "start": "2020-04-28 08:38:53.195347",
+        "stderr": "level=info msg=\"Consuming \\\"Install Config\\\" from target directory\"",
+        "stderr_lines": [
+            "level=info msg=\"Consuming \\\"Install Config\\\" from target directory\""
+        ],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [emarins.ocp : Create backup of manifests/cluster-scheduler-02-config.yml] ***************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Modify the manifests/cluster-scheduler-02-config.yml Kubernetes manifest file to prevent Pods from being scheduled on control nodes] ***
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Create backup of manifests/cluster-scheduler-02-config.yml] ***************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Generate the ignition config files] ***************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+TASK [emarins.ocp : Debug - create ignition-configs] ******************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => {
+    "command_output": {
+        "changed": true,
+        "cmd": "./openshift-install create ignition-configs --dir=/stage",
+        "delta": "0:00:09.210992",
+        "end": "2020-04-28 08:39:06.227106",
+        "failed": false,
+        "rc": 0,
+        "start": "2020-04-28 08:38:57.016114",
+        "stderr": "level=info msg=\"Consuming \\\"Openshift Manifests\\\" from target directory\"\nlevel=info msg=\"Consuming \\\"Master Machines\\\" from target directory\"\nlevel=info msg=\"Consuming \\\"Worker Machines\\\" from target directory\"\nlevel=info msg=\"Consuming \\\"Common Manifests\\\" from target directory\"",
+        "stderr_lines": [
+            "level=info msg=\"Consuming \\\"Openshift Manifests\\\" from target directory\"",
+            "level=info msg=\"Consuming \\\"Master Machines\\\" from target directory\"",
+            "level=info msg=\"Consuming \\\"Worker Machines\\\" from target directory\"",
+            "level=info msg=\"Consuming \\\"Common Manifests\\\" from target directory\""
+        ],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [emarins.ocp : Copying files from ansible to /var/ftp/pub on remote server] **************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com] => (item=/stage/bootstrap.ign)
+changed: [ansible3.ahe.boulder.ibm.com] => (item=/stage/worker.ign)
+changed: [ansible3.ahe.boulder.ibm.com] => (item=/stage/master.ign)
+
+TASK [Starting Local Playbook] ****************************************************************************************************************************
+ok: [ansible3.ahe.boulder.ibm.com] => {
+    "msg": "All tasks have been completed."
+}
+
+RUNNING HANDLER [emarins.ocp : Restart DNS service] *******************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+RUNNING HANDLER [emarins.ocp : Restart haproxy service] ***************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+RUNNING HANDLER [emarins.ocp : Restart vsftpd service] ****************************************************************************************************
+changed: [ansible3.ahe.boulder.ibm.com]
+
+PLAY RECAP ************************************************************************************************************************************************
+ansible3.ahe.boulder.ibm.com : ok=64   changed=33   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+[automation@ansible1 ocp]$
